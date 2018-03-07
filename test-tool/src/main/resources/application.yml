@@ -2,7 +2,7 @@
 # Service registers under this name
 spring:
   application:
-    name: parser-service
+    name: test-service
 
 # Discovery Server Access
 eureka:
@@ -12,15 +12,14 @@ eureka:
 
 # HTTP Server (Tomcat) Port
 server: 
-  port: 2224
+  port: 2226
 
 # Disable Spring Boot's "Whitelabel" default error page, so we can use our own
 error:
   whitelabel:
-    enabled: true
-        
+    enabled: false
+    
 default:
-  period: -2
   databasename: marketdata
   hostname: 192.168.0.27
-  portnumber: 27017
+  portnumber: 27017    

@@ -5,7 +5,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -82,28 +81,22 @@ public class ParserServiceImpl implements ParserService, MongoConstants {
 			final Date after = cal.getTime();
 
 			List<Quote> unfilteredQuotes = Parser.parse(symbol, period);
-			List<Quote> filteredQuotes = unfilteredQuotes.parallelStream()
+			unfilteredQuotes.parallelStream()
 					.filter(p -> p.getDate().after(after) || p.getDate().before(before))
 					.filter(p -> p.getClose() != null && p.getAdjClose() != null && p.getHigh() != null
 							&& p.getLow() != null && p.getOpen() != null && p.getVolume() != null)
-					.collect(Collectors.toList());
-
-			filteredQuotes.parallelStream().forEach(p -> quoteRepository.save(p));
-			retValue = filteredQuotes.size();
-			System.out.println("Unfiltered Quotes size:" + unfilteredQuotes.size());
-			System.out.println("Filtered Quotes size:" + filteredQuotes.size());
+					.forEach(p -> quoteRepository.save(p));
+			retValue = unfilteredQuotes.size();
+			System.out.println("Unfiltered Quotes size:" + retValue);
 
 		} else {
 			List<Quote> unfilteredQuotes = Parser.parse(symbol, period);
-			List<Quote> filteredQuotes = unfilteredQuotes.parallelStream()
+			unfilteredQuotes.parallelStream()
 					.filter(p -> p.getClose() != null && p.getAdjClose() != null && p.getHigh() != null
 							&& p.getLow() != null && p.getOpen() != null && p.getVolume() != null)
-					.collect(Collectors.toList());
-
-			filteredQuotes.parallelStream().forEach(p -> quoteRepository.save(p));
-			retValue = filteredQuotes.size();
-			System.out.println("Unfiltered Quotes size:" + unfilteredQuotes.size());
-			System.out.println("Filtered Quotes size:" + filteredQuotes.size());
+					.forEach(p -> quoteRepository.save(p));
+			retValue = unfilteredQuotes.size();
+			System.out.println("Unfiltered Quotes size:" + retValue);
 		}
 
 		long t1 = System.nanoTime();
